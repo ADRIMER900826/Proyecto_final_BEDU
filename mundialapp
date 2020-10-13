@@ -1,0 +1,116 @@
+import dash   # Servidor Flask
+import dash_core_components as dcc  # Graficacion
+import dash_html_components as html # HTML
+
+from covmun import confirmados_russian_federation, muertes_russian_federation, fechas_russian_federation, total_confirmados_russian_federation, total_muertes_russian_federation, desvest_russian_federation_c, desvest_russian_federation_m, mediana_russian_federation_c, mediana_russian_federation_m, media_russian_federation_c, media_russian_federation_m
+from covmun import confirmados_angola, muertes_angola, fechas_angola, total_confirmados_angola, total_muertes_angola, desvest_angola_c, desvest_angola_m, mediana_angola_c, mediana_angola_m, media_angola_c, media_angola_m 
+
+
+app = dash.Dash(__name__)
+server = app.server
+
+colors = {
+   'fondo': "#FDFEFE",
+    'texto': "#21618C"
+}
+
+app.layout = html.Div(style={'backgroundColor': colors['fondo']}, children=[
+    html.H1(
+        children=["2020: Contraste casos COVID-19 en el mundo"],
+        style={
+            'textAlign': 'center',
+            'color': colors['texto'],
+            "font-size": 50
+        }
+    ),
+    dcc.Graph(
+        id="russian_federation_angola",
+        figure={
+            'data': [
+                {'x': fechas_russian_federation[:-1], 'y': confirmados_russian_federation[:-1], 'type': 'line', 'name': 'Confirmados Russian Federation'},
+                {'x': fechas_russian_federation[:-1], 'y': muertes_russian_federation[:-1], 'type': 'line', 'name': 'Muertes Russian Federation'},
+                {'x': fechas_angola[:-1], 'y': confirmados_angola[:-1], 'type': 'line', 'name': 'Confirmados Angola'},
+                {'x': fechas_angola[:-1], 'y': muertes_angola[:-1], 'type': 'line', 'name': 'Muertes Angola'},
+                
+            ],
+            'layout': {
+                'title': 'Análisis de dos de los países con mayor numero de personas de raza blanca (Russian Federation) y menor numero de raza Blanca (Angola)',
+                'plot_bgcolor': colors['fondo'],
+                'paper_bgcolor': colors['fondo'],
+                'font': {
+                    'color': colors['texto'],
+                    "size" : 15
+                }
+            }
+        }
+    ),
+    
+    
+     dcc.Graph(
+         
+        id="comp1",
+        figure={
+            'data': [
+                {'y': total_confirmados_russian_federation, 'type': 'bar', 'name': 'Confirmados Russian Federation'},
+                {'y': total_confirmados_angola, 'type': 'bar', 'name': 'Confirmados Angola'},  
+                {'y': total_muertes_russian_federation, 'type': 'bar', 'name': 'Muertes Russian Federation'},
+                {'y': total_muertes_angola, 'type': 'bar', 'name': 'Muertes Angola'},  
+            ],
+            'layout': {
+                'title': 'Comparativo casos confirmados y muertes (Russian Federation y Angola)',
+                'plot_bgcolor': colors['fondo'],
+                "height" : "25%", 
+                "width" : "100%",
+                'paper_bgcolor': colors['fondo'],
+                'font': {
+                    'color': colors['texto']
+                }
+            }
+        }
+    ),
+    
+     dcc.Graph(
+         
+        id="Estadisticos1",
+        figure={
+            'data': [
+                {'y':  desvest_russian_federation_c, 'type': 'bar', 'name': 'DESVEST_RUSSIAN_FEDERATION_CONFIRMADOS'},
+                {'y':  desvest_angola_c, 'type': 'bar', 'name': 'DESVEST_ANGOLA_CONFIRMADOS'},
+                {'y':  desvest_russian_federation_m, 'type': 'bar', 'name': 'DESVEST_RUSSIAN_FEDERATION_MUERTES'},  
+                {'y':  desvest_angola_m, 'type': 'bar', 'name': 'DESVEST_ANGOLA_MUERTES'}, 
+                {'y':  mediana_russian_federation_c, 'type': 'bar', 'name': 'MEDIANA_RUSSIAN_FEDERATION_CONFIRMADOS'},
+                {'y':  mediana_angola_c, 'type': 'bar', 'name': 'MEDIANA_ANGOLA_CONFIRMADOS'},
+                {'y':  mediana_russian_federation_m, 'type': 'bar', 'name': 'MEDIANA_RUSSIAN_FEDERATION_MUERTES'},
+                {'y':  mediana_angola_m, 'type': 'bar', 'name': 'MEDIANA_ANGOLA_MUERTES'},
+                {'y':  media_russian_federation_c, 'type': 'bar', 'name': 'MEDIA_RUSSIAN_FEDERATION_CONFIRMADOS'},
+                {'y':  media_angola_c, 'type': 'bar', 'name': 'MEDIA_ANGOLA_CONFIRMADOS'},
+                {'y':  media_russian_federation_m, 'type': 'bar', 'name': 'MEDIA_RUSSIAN_FEDERATION_MUERTES'},
+                {'y':  media_angola_m, 'type': 'bar', 'name': 'MEDIA_ANGOLA_MUERTES'},
+               
+                
+            ],
+            'layout': {
+                'title': 'Comparativo estadístico (Russian_Federation y Angola)',
+                'plot_bgcolor': colors['fondo'],
+                'paper_bgcolor': colors['fondo'],
+                'font': {
+                    'color': colors['texto']
+                }
+            }
+        }
+    ),
+    
+
+    dcc.Markdown(children="""
+    ## Elaboración propia con datos de COVID 19 API https://covid19api.com/ 
+    
+
+    """, style={
+        'color': colors['texto'],
+        "font-size": 10
+    })
+])
+
+
+if __name__ == "__main__":
+    app.run_server(debug=True)
